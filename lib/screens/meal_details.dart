@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/providers/favourites_provider.dart';
 import 'package:meals/providers/orders_provider.dart';
+import 'package:meals/widgets/order_cancellation.dart';
 import 'package:meals/widgets/order_confirmation.dart';
 
 class MealDetailsScreen extends ConsumerWidget {
@@ -33,6 +34,10 @@ class MealDetailsScreen extends ConsumerWidget {
                   showDialog(
                       context: context,
                       builder: (ctx) => const OrderConfirmation());
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => const OrderCancellation());
                 }
               },
               child: Text(isOrdered ? 'Cancel Order' : 'Place Order'),
