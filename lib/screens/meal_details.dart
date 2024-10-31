@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/providers/favourites_provider.dart';
+import 'package:meals/providers/orders_provider.dart';
+import 'package:meals/widgets/order_confirmation.dart';
 
 class MealDetailsScreen extends ConsumerWidget {
   const MealDetailsScreen({
@@ -14,13 +16,27 @@ class MealDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favouriteMeals = ref.watch(favouriteMealsProvider);
+    final orderedMeals = ref.watch(orderedMealsProvider);
 
     final isFavourite = favouriteMeals.contains(meal);
+    final isOrdered = orderedMeals.contains(meal);
 
     return Scaffold(
         appBar: AppBar(
           title: Text(meal.title),
           actions: [
+            TextButton(
+              onPressed: () {
+                final wasAdded =
+                    ref.read(orderedMealsProvider.notifier).addOrder(meal);
+                if (wasAdded) {
+                  showDialog(
+                      context: context,
+                      builder: (ctx) => const OrderConfirmation());
+                }
+              },
+              child: Text(isOrdered ? 'Cancel Order' : 'Place Order'),
+            ),
             IconButton(
                 onPressed: () {
                   final wasAdded = ref
